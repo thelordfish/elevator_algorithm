@@ -16,23 +16,24 @@ LIFT_HEIGHT = 60
 
 PASSENGER_SIZE = 30   # size of the PNG icon
 
-
 from PIL import Image, ImageTk
+import os
 
 def load_images(canvas):
     global PERSON_IMG
 
-    # Load original PNG
-    img = Image.open("person.png")
+    # Get the directory of THIS script (elevator_frontend.py)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Resize it to something reasonable (e.g., 24×48)
+    # Build full path to person.png inside same directory
+    img_path = os.path.join(script_dir, "person.png")
+
+    # Load and resize
+    img = Image.open(img_path)
     img = img.resize((24, 48), Image.LANCZOS)
 
     PERSON_IMG = ImageTk.PhotoImage(img)
-
-    # Keep reference so Tkinter doesn't garbage collect it
-    canvas.person_img = PERSON_IMG
-
+    canvas.person_img = PERSON_IMG  # prevent GC
 
 def draw_static_building(canvas):
     for y in FLOOR_Y.values():

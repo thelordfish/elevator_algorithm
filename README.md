@@ -6,6 +6,12 @@ This project implements and explains a simple elevator-scheduling algorithm for 
 2. passenger wait time  
 3. unnecessary lift movement  
 
+[Optional tkinter frontend animation added:]
+<!-- RIGHT-FLOATING IMAGE -->
+<div style="float:right; margin-left:20px; margin-bottom:10px;">
+  <img src="https://github.com/user-attachments/assets/cdf5cc70-a37d-412a-91dd-d1040ebb7217" width="260">
+</div>
+
 The solution uses a **direction-based greedy algorithm**: the lift continues moving in its current direction until no requests remain, only reversing when necessary. It prioritises:
 
 - nearest drop-offs  
@@ -17,7 +23,7 @@ This mirrors how real lifts behave and avoids inefficient detours.
 The full pseudocode is available in `Pseudocode.docx`.  
 The implementation is in `schindler.py`.
 
-An optional `frontend.py` is added with it's `elevator_parser.py` post-submission, to visualize the output of the algorithm and make the whole thing slightly less boring.
+An optional `frontend.py` is added with it's `elevator_parser.py` post-submission, to visualize the output of the algorithm and make the whole thing slightly less boring:
 
 ---
 
@@ -26,15 +32,43 @@ An optional `frontend.py` is added with it's `elevator_parser.py` post-submissio
 ### `schindler.py`
 
 Python implementation of the scheduling logic, including:
-
 - input validation  
 - selecting the next floor to move to (drop-off or pick-up)  
 - picking up passengers en-route when possible  
 - processing drop-offs and pick-ups  
 - tracking movement time and waiting times  
-- terminating the loop when all requests are handled  
+- terminating the loop when all requests are handled
 
----
+  
+### 'Pseudocode.docx'
+
+Pseudocode of the above.
+
+### `elevator_parser.py`
+Parses the textual log produced by `schindler.py` into structured events.  
+Extracts:
+- movement events (`MOVE`)  
+- pickups (`PICKUP`)  
+- drop-offs (`DROPOFF`)  
+- simulation termination (`FINISHED`)  
+
+Used as the clean interface between backend logic and the animation frontend.
+
+### `elevator_frontend.py`
+Tkinter visual simulation of the lift.  
+Responsible for:
+- drawing the building and lift shaft  
+- rendering waiting passengers and arranging them in queues  
+- animating elevator movement smoothly between floors  
+- animating pickups into the lift and drop-offs out of it  
+- stepping through parsed events to replay the entire scenario
+
+### `person.png`
+Used for the people in the lift.
+- ---
+
+
+## Tasks from Coursework
 
 ### `Task 1 - Pseudocode`
 
@@ -74,7 +108,14 @@ While such algorithms may return better answers for some edge cases than mine as
 
 ## How to Run the Simulation
 
-Run via command line:
+Run frontend by simply running frontend.py, it has an example set of inputs already, which can be edited in the script.
+
+OR
+
+Run backend (schindler.py) via command line:
 
 ```bash
 python schindler.py <current_floor> <onboard_passengers> <direction> "<drop_off_floors>" <offboard_passengers> "<pick_up_floors>" "<pick_up_destinations>"
+
+
+
