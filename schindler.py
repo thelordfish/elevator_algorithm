@@ -5,7 +5,15 @@ import re
 
 
 def create_lift(current_floor, onboard_passengers, direction, passengers_drop_off, drop_off_floors, offboard_passengers, pick_up_floors, pick_up_destinations):
-    lift = {"current_floor":current_floor, "onboard_passengers": onboard_passengers,"direction": direction, "drop_off_floors":drop_off_floors, "offboard_passengers": offboard_passengers, "pick_up_floors": pick_up_floors, "pick_up_destinations": pick_up_destinations }
+    lift = {"current_floor":current_floor, 
+            "onboard_passengers": onboard_passengers,
+            "direction": direction, 
+            "drop_off_floors":drop_off_floors, 
+            "offboard_passengers": offboard_passengers, 
+            "pick_up_floors": pick_up_floors, 
+            "pick_up_destinations": pick_up_destinations,
+            "output_record" : []                                #For new frontend!
+              }
     return lift
 
 def valid_input(lift):
@@ -144,7 +152,9 @@ def process_drop_offs(lift, next_move):
         lift["drop_off_floors"] = [floor for floor in lift["drop_off_floors"] if floor != next_move]
 
         #print status
-        print(f"Dropping off {departures} passenger(s) on floor {next_move}.")
+        line = f"Dropping off {departures} passenger(s) on floor {next_move}."
+        print(line)
+        lift["output_record"].append(line)
     return lift
     
 def process_pick_ups(lift, next_move):
@@ -163,8 +173,10 @@ def process_pick_ups(lift, next_move):
         for i in range(offboarders):
             lift["drop_off_floors"].append(lift["pick_up_destinations"].pop(0))
 
-        #print status
-        print(f"Picking up {offboarders} passenger(s) on floor {next_move}")
+        #pass status to be printed and recorded
+        line = f"Picking up {offboarders} passenger(s) on floor {next_move}"
+        print(line)
+        lift["output_record"].append(line)
 
     return lift
 
@@ -174,8 +186,12 @@ def lift_update(lift, next_move):
     lift = process_pick_ups(lift, next_move)
     #update current floor
     lift["current_floor"] = next_move
+
     #print lift contents
-    print(f"Passengers in the lift: {lift['onboard_passengers']}")
+    line = f"Passengers in the lift: {lift['onboard_passengers']}"
+    print(line)
+    lift["output_record"].append(line)
+
     return lift
 
 def track_initial_passengers(lift, initial_passengers):
@@ -212,7 +228,7 @@ def validate_passenger_counts(lift):
     
     return True
 
-def lift(current_floor, onboard_passengers, direction, passengers_drop_off, drop_off_floors, offboard_passengers, pick_up_floors, pick_up_destinations):
+def lift(current_floor, onboard_passengers, direction, passengers_drop_off, drop_off_floors, offboard_passengers, pick_up_floors, pick_up_destinations, return_record=False):
 
     #initialize dictionary variables to organize info
     lift = create_lift(current_floor, onboard_passengers, direction, passengers_drop_off, drop_off_floors, offboard_passengers, pick_up_floors, pick_up_destinations)
@@ -228,16 +244,22 @@ def lift(current_floor, onboard_passengers, direction, passengers_drop_off, drop
         validate_passenger_counts(lift)
         next_move = find_next_move(lift)
         if next_move == None:
-            print(f"\n\nFinal state: Lift at floor {lift['current_floor']}. Passengers in lift: {lift['onboard_passengers']}. \n Total wait time for passengers inside the lift: {time['onboard_waiting_time']}. \n Total wait time for passengers waiting to be picked up: {time['offboard_waiting_time']}.\n Total wait time for passengers originally in the lift: {time['initial_passenger_time']}.\n")
+            line = f"\n\nFinal state: Lift at floor {lift['current_floor']}. Passengers in lift: {lift['onboard_passengers']}. \n Total wait time for passengers inside the lift: {time['onboard_waiting_time']}. \n Total wait time for passengers waiting to be picked up: {time['offboard_waiting_time']}.\n Total wait time for passengers originally in the lift: {time['initial_passenger_time']}.\n"
+            print(line)
+            lift["output_record"].append(line)
             flag = False
-            sys.exit()
+            if return_record == False:
+                sys.exit()
+            else:
+                return lift["output_record"]
         time_taken, time = update_time(lift, time, next_move, initial_passengers)
-
-        print(f"Moving to floor {next_move} (Time taken {time_taken} second, Total time: {time['total_time']}).")
-
+        line = f"Moving to floor {next_move} (Time taken {time_taken} second, Total time: {time['total_time']})."
+        print(line)
+        lift["output_record"].append(line)
         lift = lift_update(lift, next_move)
         initial_passengers = track_initial_passengers(lift, initial_passengers)
     return 0
+
 
 
 def get_input():
