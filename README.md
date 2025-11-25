@@ -6,7 +6,7 @@ This project implements and explains a simple elevator-scheduling algorithm for 
 2. passenger wait time  
 3. unnecessary lift movement  
 
-[Optional tkinter frontend animation added:]
+[tkinter frontend animation added after submission:]
 <!-- RIGHT-FLOATING IMAGE -->
 <div style="float:right; margin-left:20px; margin-bottom:10px;">
   <img src="https://github.com/user-attachments/assets/cdf5cc70-a37d-412a-91dd-d1040ebb7217" width="260">
